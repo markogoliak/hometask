@@ -1,0 +1,26 @@
+<template>
+    <lightning-card title="List of Contact" icon-name="standard:record">
+        <template if:true={contacts}>
+            <div class="slds-m-around_medium">
+                <template for:each={contacts} for:item="contact">
+                    <lightning-layout
+                        key={contact.Id} class="slds-m-vertical_x-small">
+                        <lightning-layout-item>
+                            <input type="checkbox" value={contact.Id}>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="grow">
+                            {contact.Name}, {contact.Email}, {contact.Account.Name}
+                        </lightning-layout-item> 
+                        <lightning-layout-item>
+                            <lightning-button-icon
+                                icon-name="utility:delete"
+                                onclick={deleteContact}
+                                data-recordid={contact.Id}
+                            ></lightning-button-icon>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </template>
+            </div>
+        </template>
+    </lightning-card>
+</template>
