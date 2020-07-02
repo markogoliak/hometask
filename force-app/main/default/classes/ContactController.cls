@@ -5,9 +5,9 @@ public with sharing class ContactController {
     }
 
     @AuraEnabled
-    public static void deleteContacts(list<Id> lstConIds){
+    public static void deleteContacts(List<Id> lstConIds){
         try {
-            list<Contact> lstConsToDelete = new List<Contact>();
+            List<Contact> lstConsToDelete = new List<Contact>();
             List<Case> cases = [SELECT ID, contactId FROM Case WHERE contactId IN: lstConIds];
             delete cases;
             for(Id itemId:lstConIds ){
@@ -15,7 +15,7 @@ public with sharing class ContactController {
             }
             delete lstConsToDelete;
         }
-        catch(Exception ex) {
+        catch(DmlException ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
