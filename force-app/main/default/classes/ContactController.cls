@@ -1,6 +1,22 @@
 public with sharing class ContactController {
     @AuraEnabled(cacheable=true)
     public static List<Contact> getContactList() {
-        return [SELECT Id, Name, Email, Account.Name FROM Contact];
+        return [SELECT Id, Name, Account.Name, Email FROM Contact];
+    }
+
+    @AuraEnabled
+    public static void deleteContacts(list<Id> lstConIds){
+        try {
+            list<Contact> lstConsToDelete = new List<Contact>();
+            List<Case> cases = [SELECT ID, contactId FROM Case WHERE contactId IN: lstConIds];
+            delete cases;
+            for(Id itemId:lstConIds ){
+                lstConsToDelete.add(new Contact(Id = itemId));
+            }
+            delete lstConsToDelete;
+        }
+        catch(Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
     }
 }
