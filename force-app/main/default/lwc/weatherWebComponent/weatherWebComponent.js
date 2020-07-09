@@ -2,7 +2,7 @@ import { LightningElement, wire, api,track } from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
 import performCallout from '@salesforce/apex/WebServiceLWC.performCallout';
 
-export default class Selector extends LightningElement {
+export default class WeatherWebComponent extends LightningElement {
     @api recordId;
     
     @track accountNames;
@@ -20,11 +20,13 @@ export default class Selector extends LightningElement {
      wiredAccounts({ error, data }) {
         if (data) {
             this.accountNames = data;
+            console.log(data)
             this.city = this.accountNames.fields.BillingCity.value;
             this.country = this.accountNames.fields.BillingCountry.value;
-            if(this.city !== undefined && this.country !== undefined){
-                performCallout({location: this.city+ ',' + this.country}).then(data => {
+            if(this.city !== undefined){
+                performCallout({location: this.city.replace(" ", "_")}).then(data => {
                   this.weatherData = data;
+                  console.log(data);
                   this.tempCity = this.weatherData.cityTemp;
                   this.windSpeedCity = this.weatherData.cityWindSpeed;
                   this.precipitation = this.weatherData.cityPrecip;
@@ -36,7 +38,7 @@ export default class Selector extends LightningElement {
     }
 
     get titleName(){
-      return 'Info about weather in '+ this.city + ', ' + this.country;
+      return 'Info about weather in '+ this.city;
     }
     get tempCity(){
       return this.tempCity;
